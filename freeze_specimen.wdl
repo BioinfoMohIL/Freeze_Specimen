@@ -10,7 +10,7 @@ task RunFreezeBact {
     }
 
     command <<<
-        CMD="python3 /app/freeze_specimen.py --input_file ~{input_file} --num_of_specimen ~{num_of_specimen}"
+        CMD="python3 freeze_specimen.py --input_file ~{input_file} --num_of_specimen ~{num_of_specimen}"
 
         # Add --sheetname if it's not null
         if [ -n "~{sheetname}" ]; then
