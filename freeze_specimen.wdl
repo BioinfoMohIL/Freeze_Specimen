@@ -31,7 +31,7 @@ task RunFreezeBact {
     }
 }
 
-workflow Workflow {
+workflow FreezeSpecimen {
     input {
         File input_file
         String? sheetname
