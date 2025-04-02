@@ -21,7 +21,8 @@ task RunFreezeBact {
     >>>
 
     output {
-        File output_file = stdout()
+        File output_log = stdout()
+        File output_file = "bact_to_freeze.xlsx"
     }
 
     runtime {
@@ -31,7 +32,7 @@ task RunFreezeBact {
     }
 }
 
-workflow FreezeSpecimen {
+workflow Workflow {
     input {
         File input_file
         String? sheetname
@@ -48,6 +49,7 @@ workflow FreezeSpecimen {
     }
 
     output {
-        File output_file = RunFreezeBact.output_file
+        File output_log = RunFreezeBact.output_log
+        File output_file = RunFreezeBact.file
     }
 }
