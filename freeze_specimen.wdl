@@ -27,6 +27,7 @@ task RunFreezeBact {
 
     runtime {
         docker: docker_image
+        continueOnReturnCode: [0, 1]
         memory: "4G"
         cpu: 2
     }
