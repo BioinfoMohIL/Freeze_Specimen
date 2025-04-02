@@ -1,7 +1,7 @@
 version 1.0
 
 
-task RunFreezeBact {
+task FetchSpecimen {
     input {
         File input_file
         String docker_image
@@ -33,7 +33,7 @@ task RunFreezeBact {
     }
 }
 
-workflow Workflow {
+workflow FreezeSpecimen {
     input {
         File input_file
         String? sheetname
@@ -50,7 +50,7 @@ workflow Workflow {
     }
 
     output {
-        File output_log = RunFreezeBact.output_log
-        File output_file = RunFreezeBact.file
+        File output_log = FetchSpecimen.output_log
+        File output_file = FetchSpecimen.file
     }
 }
