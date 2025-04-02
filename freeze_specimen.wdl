@@ -41,7 +41,7 @@ workflow FreezeSpecimen {
         String docker_image = "bioinfomoh/utils:1"
     }
 
-    call RunFreezeBact {
+    call FetchSpecimen {
         input:
             input_file = input_file,
             docker_image = docker_image,
