@@ -1,56 +1,57 @@
 version 1.0
 
-
-task FetchSpecimen {
+workflow Specie_Detection {
     input {
-        File input_file
-        String docker_image
-        String? sheetname
-        String num_of_specimen
+        File read1 
+        File read2
+        String sample_id 
+
     }
 
-    command <<<
-        CMD="python3 /app/freeze_specimen.py --input_file ~{input_file} --num_of_specimen ~{num_of_specimen}"
+    call Detect_Specie {
+        input:
+            read1 = read1,
+            read2 = read2,
+            sample_id = sample_id
+            
+    }
 
-        # Add --sheetname if it's not null
-        if [ -n "~{sheetname}" ]; then
-            CMD="${CMD} --sheetname ~{sheetname}"
-        fi
+    output {
+        File report = Detect_Specie.report
+        String specie_detected = Detect_Specie.specie_detected
+    }
 
-        echo ${CMD} && ${CMD}
+    meta {
+        author: "David"
+        description: "Classify paired-end reads using Kraken2"
+    }
+}
+
+task Detect_Specie {
+  input {
+    File read1
+    File read2
+    String sample_id
+    String docker = "bioinfomoh/specie_detection:1"
+    Int cpu = 10
+  
+  }
+  command <<<
+       /app/specie_detection.sh --read1 ~{read1} --read2 ~{read2} --cpu ~{cpu} --output_report ~{sample_id}.report --specie_detected specie_detected.txt
     >>>
 
     output {
-        File output_log = stdout()
-        File output_file = "bact_to_freeze.xlsx"
+        File report = "~{sample_id}.report"
+        String specie_detected = read_string("specie_detected.txt")
     }
 
     runtime {
-        docker: docker_image
-        continueOnReturnCode: [0, 1]
-        memory: "4G"
-        cpu: 2
+        docker: docker
+        cpu: cpu
     }
 }
 
-workflow FreezeSpecimen {
-    input {
-        File input_file
-        String? sheetname
-        String num_of_specimen = '30'
-        String docker_image = "bioinfomoh/utils:1"
-    }
 
-    call FetchSpecimen {
-        input:
-            input_file = input_file,
-            docker_image = docker_image,
-            sheetname = sheetname,
-            num_of_specimen = num_of_specimen,
-    }
-
-    output {
-        File output_log = FetchSpecimen.output_log
-        File output_file = FetchSpecimen.file
-    }
-}
+ 
+  
+ 
